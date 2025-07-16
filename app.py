@@ -6,22 +6,16 @@ app = FastAPI()
 
 @app.get("/J_emmons_07/download")
 def download(url: str = Query(...)):
-    if not os.path.exists("cookies.txt"):
-        return {"error": "cookies.txt not found in project root. Make sure it’s included and in Netscape format."}
-
     ydl_opts = {
         "quiet": True,
         "no_warnings": True,
         "skip_download": True,
         "format": "bestvideo+bestaudio/best",
-        "cookiefile": "cookies.txt"
+        "cookiefile": os.path.join(os.path.dirname(__file__), "cookies.txt"),  # ✅ correct path
     }
 
-    try:
-        with YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=False)
-    except Exception as e:
-        return {"error": str(e)}
+    with YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(url, download=False)
 
     return {
         "author": "J_emmons_07",
