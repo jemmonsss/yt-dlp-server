@@ -9,10 +9,13 @@ def download(url: str = Query(...)):
         "quiet": True,
         "no_warnings": True,
         "skip_download": True,
-        "format": "bestvideo+bestaudio/best"
+        "format": "bestvideo+bestaudio/best",
+        "cookiefile": "cookies.txt"  # 👈 Use your exported YouTube cookies
     }
+
     with YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
+
     return {
         "author": "J_emmons_07",
         "title": info.get("title"),
